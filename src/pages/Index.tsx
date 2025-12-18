@@ -169,6 +169,7 @@ const Index = () => {
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [compatibilityFilter, setCompatibilityFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('default');
 
   const handleCalculate = () => {
     const lp = calculateLifePath(birthDate);
@@ -187,7 +188,7 @@ const Index = () => {
 
   const filterProfiles = (profiles: Profile[]) => {
     const myLifePath = lifePath || 5;
-    return profiles.filter(profile => {
+    let filtered = profiles.filter(profile => {
       const compatibility = calculateCompatibility(myLifePath, profile.lifePath);
       if (compatibilityFilter === 'all') return true;
       if (compatibilityFilter === 'high') return compatibility >= 85;
@@ -195,6 +196,22 @@ const Index = () => {
       if (compatibilityFilter === 'low') return compatibility < 55;
       return true;
     });
+
+    if (sortBy === 'compatibility-high') {
+      filtered = [...filtered].sort((a, b) => {
+        const compA = calculateCompatibility(myLifePath, a.lifePath);
+        const compB = calculateCompatibility(myLifePath, b.lifePath);
+        return compB - compA;
+      });
+    } else if (sortBy === 'compatibility-low') {
+      filtered = [...filtered].sort((a, b) => {
+        const compA = calculateCompatibility(myLifePath, a.lifePath);
+        const compB = calculateCompatibility(myLifePath, b.lifePath);
+        return compA - compB;
+      });
+    }
+
+    return filtered;
   };
 
   return (
@@ -204,7 +221,7 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8 relative z-10">
         <header className="text-center mb-12">
           <h1 className="text-5xl md:text-7xl font-bold text-primary mb-4 tracking-wide">
-            Numerology Love
+            Путь
           </h1>
           <p className="text-lg text-muted-foreground font-light">
             Найди свою судьбу через мудрость чисел
@@ -321,13 +338,13 @@ const Index = () => {
 
           <TabsContent value="profiles" className="space-y-6">
             <Card className="bg-card/80 backdrop-blur border-border mb-6">
-              <CardContent className="pt-6">
+              <CardContent className="pt-6 space-y-4">
                 <div className="flex items-center gap-4 flex-wrap">
                   <Label className="text-base font-semibold flex items-center gap-2">
                     <Icon name="Filter" size={20} />
                     Фильтр совместимости:
                   </Label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <Button
                       variant={compatibilityFilter === 'all' ? 'default' : 'outline'}
                       onClick={() => setCompatibilityFilter('all')}
@@ -358,6 +375,38 @@ const Index = () => {
                     >
                       <Icon name="TrendingDown" size={16} className="mr-2" />
                       Низкая (&lt;55%)
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 flex-wrap">
+                  <Label className="text-base font-semibold flex items-center gap-2">
+                    <Icon name="ArrowUpDown" size={20} />
+                    Сортировка:
+                  </Label>
+                  <div className="flex gap-2 flex-wrap">
+                    <Button
+                      variant={sortBy === 'default' ? 'default' : 'outline'}
+                      onClick={() => setSortBy('default')}
+                      className={sortBy === 'default' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                    >
+                      По умолчанию
+                    </Button>
+                    <Button
+                      variant={sortBy === 'compatibility-high' ? 'default' : 'outline'}
+                      onClick={() => setSortBy('compatibility-high')}
+                      className={sortBy === 'compatibility-high' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                    >
+                      <Icon name="ArrowUp" size={16} className="mr-2" />
+                      Совместимость ↓
+                    </Button>
+                    <Button
+                      variant={sortBy === 'compatibility-low' ? 'default' : 'outline'}
+                      onClick={() => setSortBy('compatibility-low')}
+                      className={sortBy === 'compatibility-low' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                    >
+                      <Icon name="ArrowDown" size={16} className="mr-2" />
+                      Совместимость ↑
                     </Button>
                   </div>
                 </div>
