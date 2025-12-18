@@ -10,26 +10,19 @@ interface AuthProps {
 }
 
 const Auth = ({ onAuth }: AuthProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState<string | null>(null);
 
-  const handleYandexAuth = async () => {
-    if (!email || !email.includes('@')) return;
+  const handleSocialAuth = async (provider: string) => {
+    setIsLoading(provider);
     
-    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const mockUsers = {
+      ok: { name: 'Александр', email: 'alex@ok.ru', avatar: '👨' }
+    };
     
-    const name = email.split('@')[0];
-    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
-    
-    onAuth({
-      name: capitalizedName,
-      email: email,
-      avatar: '👤'
-    });
-    
-    setIsLoading(false);
+    onAuth(mockUsers[provider as keyof typeof mockUsers] || mockUsers.ok);
+    setIsLoading(null);
   };
 
   return (
@@ -59,34 +52,23 @@ const Auth = ({ onAuth }: AuthProps) => {
               Вход в приложение
             </CardTitle>
             <CardDescription className="text-base text-foreground/60">
-              Быстрый вход через email
+              Войдите через социальные сети
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4 relative">
-            <div className="space-y-3">
-              <Label htmlFor="email" className="text-base font-medium">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleYandexAuth()}
-                className="glass-effect border-white/10 h-12 text-base focus:border-primary/50 transition-all"
-              />
-            </div>
-
+          <CardContent className="space-y-3 relative">
             <Button
-              onClick={handleYandexAuth}
-              disabled={isLoading || !email || !email.includes('@')}
-              className="w-full h-14 text-base bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-600 text-white border-0 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => handleSocialAuth('ok')}
+              disabled={isLoading !== null}
+              className="w-full h-14 text-base bg-[#EE8208] hover:bg-[#D97507] text-white border-0 shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              {isLoading ? (
+              {isLoading === 'ok' ? (
                 <Icon name="Loader2" size={20} className="mr-3 animate-spin" />
               ) : (
-                <Icon name="LogIn" size={20} className="mr-3" />
+                <svg className="mr-3 h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 7.7c1.2 0 2.1.9 2.1 2.1s-.9 2.1-2.1 2.1-2.1-.9-2.1-2.1.9-2.1 2.1-2.1zm5.6 10.7c-.4.4-1 .4-1.4 0l-2.8-2.8-2.8 2.8c-.4.4-1 .4-1.4 0s-.4-1 0-1.4l2.8-2.8-2.8-2.8c-.4-.4-.4-1 0-1.4s1-.4 1.4 0l2.8 2.8 2.8-2.8c.4-.4 1-.4 1.4 0s.4 1 0 1.4l-2.8 2.8 2.8 2.8c.4.4.4 1 0 1.4z"/>
+                </svg>
               )}
-              Войти
+              Войти через Одноклассники
             </Button>
 
             <div className="pt-4 text-center">
