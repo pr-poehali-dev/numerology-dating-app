@@ -168,6 +168,7 @@ const Index = () => {
   const [destiny, setDestiny] = useState<number | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [favorites, setFavorites] = useState<number[]>([]);
+  const [compatibilityFilter, setCompatibilityFilter] = useState<string>('all');
 
   const handleCalculate = () => {
     const lp = calculateLifePath(birthDate);
@@ -182,6 +183,18 @@ const Index = () => {
         ? prev.filter(id => id !== profileId)
         : [...prev, profileId]
     );
+  };
+
+  const filterProfiles = (profiles: Profile[]) => {
+    const myLifePath = lifePath || 5;
+    return profiles.filter(profile => {
+      const compatibility = calculateCompatibility(myLifePath, profile.lifePath);
+      if (compatibilityFilter === 'all') return true;
+      if (compatibilityFilter === 'high') return compatibility >= 85;
+      if (compatibilityFilter === 'medium') return compatibility >= 55 && compatibility < 85;
+      if (compatibilityFilter === 'low') return compatibility < 55;
+      return true;
+    });
   };
 
   return (
@@ -307,8 +320,63 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="profiles" className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              {mockProfiles.map((profile) => {
+            <Card className="bg-card/80 backdrop-blur border-border mb-6">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4 flex-wrap">
+                  <Label className="text-base font-semibold flex items-center gap-2">
+                    <Icon name="Filter" size={20} />
+                    Фильтр совместимости:
+                  </Label>
+                  <div className="flex gap-2">
+                    <Button
+                      variant={compatibilityFilter === 'all' ? 'default' : 'outline'}
+                      onClick={() => setCompatibilityFilter('all')}
+                      className={compatibilityFilter === 'all' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                    >
+                      Все
+                    </Button>
+                    <Button
+                      variant={compatibilityFilter === 'high' ? 'default' : 'outline'}
+                      onClick={() => setCompatibilityFilter('high')}
+                      className={compatibilityFilter === 'high' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                    >
+                      <Icon name="TrendingUp" size={16} className="mr-2" />
+                      Высокая (85%+)
+                    </Button>
+                    <Button
+                      variant={compatibilityFilter === 'medium' ? 'default' : 'outline'}
+                      onClick={() => setCompatibilityFilter('medium')}
+                      className={compatibilityFilter === 'medium' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                    >
+                      <Icon name="Minus" size={16} className="mr-2" />
+                      Средняя (55-84%)
+                    </Button>
+                    <Button
+                      variant={compatibilityFilter === 'low' ? 'default' : 'outline'}
+                      onClick={() => setCompatibilityFilter('low')}
+                      className={compatibilityFilter === 'low' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                    >
+                      <Icon name="TrendingDown" size={16} className="mr-2" />
+                      Низкая (&lt;55%)
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {filterProfiles(mockProfiles).length === 0 ? (
+              <Card className="bg-card/80 backdrop-blur border-border">
+                <CardContent className="flex flex-col items-center justify-center py-16">
+                  <Icon name="Search" size={64} className="text-muted-foreground mb-4" />
+                  <h3 className="text-2xl font-semibold text-foreground mb-2">Никого не найдено</h3>
+                  <p className="text-muted-foreground text-center max-w-md">
+                    Попробуйте изменить фильтр совместимости
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-6">
+                {filterProfiles(mockProfiles).map((profile) => {
                 const myLifePath = lifePath || 5;
                 const compatibility = calculateCompatibility(myLifePath, profile.lifePath);
                 
@@ -518,7 +586,8 @@ const Index = () => {
                   </Card>
                 );
               })}
-            </div>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="favorites" className="space-y-6">
