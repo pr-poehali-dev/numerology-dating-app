@@ -216,116 +216,125 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      <div className="absolute inset-0 star-pattern pointer-events-none"></div>
+      <div className="absolute inset-0 gradient-mesh pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.1),rgba(255,255,255,0))]"></div>
       
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <header className="text-center mb-12">
-          <h1 className="text-5xl md:text-7xl font-bold text-primary mb-4 tracking-wide">
+      <div className="container mx-auto px-4 py-12 relative z-10">
+        <header className="text-center mb-16">
+          <div className="inline-block mb-6 px-4 py-1.5 rounded-full glass-effect">
+            <span className="text-sm font-medium bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+              Нумерология нового поколения
+            </span>
+          </div>
+          <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-br from-white via-primary to-purple-300 bg-clip-text text-transparent animate-float">
             Путь
           </h1>
-          <p className="text-lg text-muted-foreground font-light">
+          <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
             Найди свою судьбу через мудрость чисел
           </p>
         </header>
 
         <Tabs defaultValue="calculator" className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full grid-cols-4 mb-8 bg-card border border-border">
-            <TabsTrigger value="calculator" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+          <TabsList className="grid w-full grid-cols-4 mb-12 glass-effect p-2 gap-2">
+            <TabsTrigger value="calculator" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all rounded-lg">
               <Icon name="Calculator" size={18} className="mr-2" />
               Калькулятор
             </TabsTrigger>
-            <TabsTrigger value="profiles" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="profiles" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all rounded-lg">
               <Icon name="Users" size={18} className="mr-2" />
               Анкеты
             </TabsTrigger>
-            <TabsTrigger value="favorites" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="favorites" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all rounded-lg">
               <Icon name="Star" size={18} className="mr-2" />
               Избранное
               {favorites.length > 0 && (
-                <Badge className="ml-2 bg-primary text-primary-foreground">{favorites.length}</Badge>
+                <Badge className="ml-2 bg-white/20 text-white border-0">{favorites.length}</Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="guide" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="guide" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all rounded-lg">
               <Icon name="BookOpen" size={18} className="mr-2" />
               Справочник
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="calculator" className="space-y-6">
-            <Card className="bg-card/80 backdrop-blur border-border shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-3xl text-primary flex items-center gap-3">
-                  <Icon name="Sparkles" size={32} />
+            <Card className="glass-effect shadow-2xl overflow-hidden border-white/10">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5 pointer-events-none"></div>
+              <CardHeader className="relative">
+                <CardTitle className="text-4xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent flex items-center gap-3">
+                  <Icon name="Sparkles" size={36} />
                   Расчёт нумерологических чисел
                 </CardTitle>
-                <CardDescription className="text-base">
+                <CardDescription className="text-base text-foreground/60">
                   Узнайте своё число жизненного пути и число судьбы
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 relative">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-base">Полное имя</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="name" className="text-base font-medium">Полное имя</Label>
                     <Input
                       id="name"
                       placeholder="Иван Иванов"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="bg-secondary border-border"
+                      className="glass-effect border-white/10 h-12 text-base focus:border-primary/50 transition-all"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="birthDate" className="text-base">Дата рождения</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="birthDate" className="text-base font-medium">Дата рождения</Label>
                     <Input
                       id="birthDate"
                       type="date"
                       value={birthDate}
                       onChange={(e) => setBirthDate(e.target.value)}
-                      className="bg-secondary border-border"
+                      className="glass-effect border-white/10 h-12 text-base focus:border-primary/50 transition-all"
                     />
                   </div>
                 </div>
 
                 <Button 
                   onClick={handleCalculate} 
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6 shadow-lg"
+                  className="w-full bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-600 text-white text-lg py-7 shadow-2xl shadow-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   disabled={!name || !birthDate}
                 >
-                  <Icon name="Wand2" size={20} className="mr-2" />
+                  <Icon name="Wand2" size={22} className="mr-2" />
                   Рассчитать
                 </Button>
 
                 {lifePath !== null && destiny !== null && (
                   <div className="grid md:grid-cols-2 gap-6 mt-8 animate-fade-in">
-                    <Card className="bg-gradient-to-br from-primary/10 to-transparent border-primary/30">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-primary">
+                    <Card className="glass-effect border-primary/20 shadow-xl shadow-primary/10 overflow-hidden group hover:border-primary/40 transition-all">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <CardHeader className="relative">
+                        <CardTitle className="flex items-center gap-2 bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
                           <Icon name="TrendingUp" size={24} />
                           Число жизненного пути
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <div className="text-6xl font-bold text-primary text-center mb-4">
+                      <CardContent className="relative">
+                        <div className="text-7xl font-bold bg-gradient-to-br from-primary via-purple-400 to-purple-500 bg-clip-text text-transparent text-center mb-6">
                           {lifePath}
                         </div>
-                        <p className="text-center text-foreground/80">
+                        <p className="text-center text-foreground/70 leading-relaxed">
                           {getNumberMeaning(lifePath)}
                         </p>
                       </CardContent>
                     </Card>
 
-                    <Card className="bg-gradient-to-br from-primary/10 to-transparent border-primary/30">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-primary">
+                    <Card className="glass-effect border-primary/20 shadow-xl shadow-primary/10 overflow-hidden group hover:border-primary/40 transition-all">
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <CardHeader className="relative">
+                        <CardTitle className="flex items-center gap-2 bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
                           <Icon name="Star" size={24} />
                           Число судьбы
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <div className="text-6xl font-bold text-primary text-center mb-4">
+                      <CardContent className="relative">
+                        <div className="text-7xl font-bold bg-gradient-to-br from-primary via-purple-400 to-purple-500 bg-clip-text text-transparent text-center mb-6">
                           {destiny}
                         </div>
-                        <p className="text-center text-foreground/80">
+                        <p className="text-center text-foreground/70 leading-relaxed">
                           {getNumberMeaning(destiny)}
                         </p>
                       </CardContent>
@@ -337,25 +346,27 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="profiles" className="space-y-6">
-            <Card className="bg-card/80 backdrop-blur border-border mb-6">
-              <CardContent className="pt-6 space-y-4">
-                <div className="flex items-center gap-4 flex-wrap">
-                  <Label className="text-base font-semibold flex items-center gap-2">
-                    <Icon name="Filter" size={20} />
-                    Фильтр совместимости:
-                  </Label>
+            <Card className="glass-effect border-white/10 mb-6">
+              <CardContent className="pt-6 space-y-6">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Icon name="Filter" size={20} className="text-primary" />
+                    </div>
+                    <Label className="text-base font-semibold">Фильтр совместимости</Label>
+                  </div>
                   <div className="flex gap-2 flex-wrap">
                     <Button
                       variant={compatibilityFilter === 'all' ? 'default' : 'outline'}
                       onClick={() => setCompatibilityFilter('all')}
-                      className={compatibilityFilter === 'all' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                      className={compatibilityFilter === 'all' ? 'bg-gradient-to-r from-primary to-purple-500 text-white border-0' : 'glass-effect border-white/10'}
                     >
                       Все
                     </Button>
                     <Button
                       variant={compatibilityFilter === 'high' ? 'default' : 'outline'}
                       onClick={() => setCompatibilityFilter('high')}
-                      className={compatibilityFilter === 'high' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                      className={compatibilityFilter === 'high' ? 'bg-gradient-to-r from-primary to-purple-500 text-white border-0' : 'glass-effect border-white/10'}
                     >
                       <Icon name="TrendingUp" size={16} className="mr-2" />
                       Высокая (85%+)
@@ -363,7 +374,7 @@ const Index = () => {
                     <Button
                       variant={compatibilityFilter === 'medium' ? 'default' : 'outline'}
                       onClick={() => setCompatibilityFilter('medium')}
-                      className={compatibilityFilter === 'medium' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                      className={compatibilityFilter === 'medium' ? 'bg-gradient-to-r from-primary to-purple-500 text-white border-0' : 'glass-effect border-white/10'}
                     >
                       <Icon name="Minus" size={16} className="mr-2" />
                       Средняя (55-84%)
@@ -371,7 +382,7 @@ const Index = () => {
                     <Button
                       variant={compatibilityFilter === 'low' ? 'default' : 'outline'}
                       onClick={() => setCompatibilityFilter('low')}
-                      className={compatibilityFilter === 'low' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                      className={compatibilityFilter === 'low' ? 'bg-gradient-to-r from-primary to-purple-500 text-white border-0' : 'glass-effect border-white/10'}
                     >
                       <Icon name="TrendingDown" size={16} className="mr-2" />
                       Низкая (&lt;55%)
@@ -379,23 +390,27 @@ const Index = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 flex-wrap">
-                  <Label className="text-base font-semibold flex items-center gap-2">
-                    <Icon name="ArrowUpDown" size={20} />
-                    Сортировка:
-                  </Label>
+                <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Icon name="ArrowUpDown" size={20} className="text-primary" />
+                    </div>
+                    <Label className="text-base font-semibold">Сортировка</Label>
+                  </div>
                   <div className="flex gap-2 flex-wrap">
                     <Button
                       variant={sortBy === 'default' ? 'default' : 'outline'}
                       onClick={() => setSortBy('default')}
-                      className={sortBy === 'default' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                      className={sortBy === 'default' ? 'bg-gradient-to-r from-primary to-purple-500 text-white border-0' : 'glass-effect border-white/10'}
                     >
                       По умолчанию
                     </Button>
                     <Button
                       variant={sortBy === 'compatibility-high' ? 'default' : 'outline'}
                       onClick={() => setSortBy('compatibility-high')}
-                      className={sortBy === 'compatibility-high' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                      className={sortBy === 'compatibility-high' ? 'bg-gradient-to-r from-primary to-purple-500 text-white border-0' : 'glass-effect border-white/10'}
                     >
                       <Icon name="ArrowUp" size={16} className="mr-2" />
                       Совместимость ↓
@@ -403,7 +418,7 @@ const Index = () => {
                     <Button
                       variant={sortBy === 'compatibility-low' ? 'default' : 'outline'}
                       onClick={() => setSortBy('compatibility-low')}
-                      className={sortBy === 'compatibility-low' ? 'bg-primary text-primary-foreground' : 'border-border'}
+                      className={sortBy === 'compatibility-low' ? 'bg-gradient-to-r from-primary to-purple-500 text-white border-0' : 'glass-effect border-white/10'}
                     >
                       <Icon name="ArrowDown" size={16} className="mr-2" />
                       Совместимость ↑
@@ -414,11 +429,13 @@ const Index = () => {
             </Card>
 
             {filterProfiles(mockProfiles).length === 0 ? (
-              <Card className="bg-card/80 backdrop-blur border-border">
-                <CardContent className="flex flex-col items-center justify-center py-16">
-                  <Icon name="Search" size={64} className="text-muted-foreground mb-4" />
+              <Card className="glass-effect border-white/10">
+                <CardContent className="flex flex-col items-center justify-center py-20">
+                  <div className="p-6 rounded-full bg-primary/10 mb-6">
+                    <Icon name="Search" size={48} className="text-primary" />
+                  </div>
                   <h3 className="text-2xl font-semibold text-foreground mb-2">Никого не найдено</h3>
-                  <p className="text-muted-foreground text-center max-w-md">
+                  <p className="text-foreground/60 text-center max-w-md">
                     Попробуйте изменить фильтр совместимости
                   </p>
                 </CardContent>
@@ -430,17 +447,18 @@ const Index = () => {
                 const compatibility = calculateCompatibility(myLifePath, profile.lifePath);
                 
                 return (
-                  <Card key={profile.id} className="bg-card/80 backdrop-blur border-border hover:shadow-xl transition-shadow relative">
+                  <Card key={profile.id} className="glass-effect border-white/10 hover:border-primary/30 transition-all hover:shadow-2xl hover:shadow-primary/10 relative group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg"></div>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-4 right-4 z-10 hover:bg-transparent"
+                      className="absolute top-4 right-4 z-10 hover:bg-white/10 transition-all"
                       onClick={() => toggleFavorite(profile.id)}
                     >
                       <Icon 
                         name="Star" 
                         size={24} 
-                        className={favorites.includes(profile.id) ? "fill-primary text-primary" : "text-muted-foreground hover:text-primary"}
+                        className={favorites.includes(profile.id) ? "fill-primary text-primary drop-shadow-lg" : "text-foreground/40 hover:text-primary transition-colors"}
                       />
                     </Button>
                     <CardHeader>

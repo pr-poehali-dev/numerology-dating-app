@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,44 +6,44 @@
 
 @layer base {
   :root {
-    --background: 220 17% 12%;
-    --foreground: 40 100% 97%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 15% 16%;
-    --card-foreground: 40 100% 97%;
+    --card: 240 10% 7%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 15% 16%;
-    --popover-foreground: 40 100% 97%;
+    --popover: 240 10% 7%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 43 74% 49%;
-    --primary-foreground: 220 17% 12%;
+    --primary: 280 80% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 22%;
-    --secondary-foreground: 40 100% 97%;
+    --secondary: 240 10% 14%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 220 15% 20%;
-    --muted-foreground: 40 20% 70%;
+    --muted: 240 10% 12%;
+    --muted-foreground: 240 5% 65%;
 
-    --accent: 43 74% 49%;
-    --accent-foreground: 220 17% 12%;
+    --accent: 280 80% 60%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 40 100% 97%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
-    --ring: 43 74% 49%;
+    --border: 240 10% 18%;
+    --input: 240 10% 18%;
+    --ring: 280 80% 60%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    --sidebar-background: 220 15% 16%;
-    --sidebar-foreground: 40 100% 97%;
-    --sidebar-primary: 43 74% 49%;
-    --sidebar-primary-foreground: 220 17% 12%;
-    --sidebar-accent: 220 15% 22%;
-    --sidebar-accent-foreground: 40 100% 97%;
-    --sidebar-border: 220 15% 25%;
-    --sidebar-ring: 43 74% 49%;
+    --sidebar-background: 240 10% 7%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 280 80% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 10% 14%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 10% 18%;
+    --sidebar-ring: 280 80% 60%;
   }
 }
 
@@ -54,7 +54,12 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "Montserrat", sans-serif;
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   h1,
@@ -63,7 +68,8 @@
   h4,
   h5,
   h6 {
-    font-family: "Cormorant", serif;
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -87,15 +93,33 @@
     }
   }
 
-  .star-pattern {
-    background-image:
-      radial-gradient(2px 2px at 20px 30px, hsl(var(--primary)), transparent),
-      radial-gradient(2px 2px at 60px 70px, hsl(var(--primary)), transparent),
-      radial-gradient(1px 1px at 50px 50px, hsl(var(--primary)), transparent),
-      radial-gradient(1px 1px at 130px 80px, hsl(var(--primary)), transparent),
-      radial-gradient(2px 2px at 90px 10px, hsl(var(--primary)), transparent);
-    background-size: 200px 100px;
-    background-repeat: repeat;
-    opacity: 0.15;
+  .gradient-mesh {
+    background:
+      radial-gradient(at 0% 0%, hsl(280, 80%, 30%) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsl(240, 80%, 40%) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsl(300, 80%, 35%) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsl(260, 80%, 30%) 0px, transparent 50%);
+    opacity: 0.3;
+    filter: blur(80px);
+  }
+
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
   }
 }
