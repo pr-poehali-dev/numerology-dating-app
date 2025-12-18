@@ -1,0 +1,39 @@
+{
+  "tests": [
+    {
+      "name": "Mock authentication for Google",
+      "method": "GET",
+      "path": "/?action=mock&provider=google",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "id": "string",
+        "name": "string",
+        "email": "string",
+        "avatar": "string",
+        "provider": "google"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Mock authentication for VK",
+      "method": "GET",
+      "path": "/?action=mock&provider=vk",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "provider": "vk"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get Yandex OAuth login URL",
+      "method": "GET",
+      "path": "/?action=login",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "url": "string",
+        "state": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
