@@ -24,6 +24,7 @@ const Auth = ({ onAuth }: AuthProps) => {
     
     onAuth(mockUsers[provider as keyof typeof mockUsers] || mockUsers.ok);
     setIsLoading(null);
+    window.location.href = '/';
   };
 
   return (

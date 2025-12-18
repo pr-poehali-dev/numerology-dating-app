@@ -11,14 +11,22 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [user, setUser] = useState<{ name: string; email: string; avatar: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; avatar: string } | null>({
+    name: 'Гость',
+    email: 'guest@example.com',
+    avatar: '👤'
+  });
 
   const handleAuth = (userData: { name: string; email: string; avatar: string }) => {
     setUser(userData);
   };
 
   const handleLogout = () => {
-    setUser(null);
+    setUser({
+      name: 'Гость',
+      email: 'guest@example.com',
+      avatar: '👤'
+    });
   };
 
   return (
@@ -30,23 +38,11 @@ const App = () => {
           <Routes>
             <Route 
               path="/" 
-              element={
-                user ? (
-                  <Index user={user} onLogout={handleLogout} />
-                ) : (
-                  <Navigate to="/auth" replace />
-                )
-              } 
+              element={<Index user={user} onAuth={handleAuth} onLogout={handleLogout} />} 
             />
             <Route 
               path="/auth" 
-              element={
-                user ? (
-                  <Navigate to="/" replace />
-                ) : (
-                  <Auth onAuth={handleAuth} />
-                )
-              } 
+              element={<Auth onAuth={handleAuth} />} 
             />
             <Route path="*" element={<NotFound />} />
           </Routes>

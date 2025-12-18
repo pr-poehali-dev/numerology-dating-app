@@ -163,10 +163,11 @@ const mockProfiles: Profile[] = [
 
 interface IndexProps {
   user: { name: string; email: string; avatar: string };
+  onAuth: (userData: { name: string; email: string; avatar: string }) => void;
   onLogout: () => void;
 }
 
-const Index = ({ user, onLogout }: IndexProps) => {
+const Index = ({ user, onAuth, onLogout }: IndexProps) => {
   const [name, setName] = useState(user.name);
   const [birthDate, setBirthDate] = useState('');
   const [lifePath, setLifePath] = useState<number | null>(null);
@@ -233,22 +234,34 @@ const Index = ({ user, onLogout }: IndexProps) => {
               </span>
             </div>
             <div className="flex items-center gap-4">
-              <div className="glass-effect px-4 py-2 rounded-full flex items-center gap-3">
-                <span className="text-3xl">{user.avatar}</span>
-                <div className="text-left">
-                  <div className="text-sm font-medium">{user.name}</div>
-                  <div className="text-xs text-foreground/50">{user.email}</div>
-                </div>
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={onLogout}
-                className="glass-effect border-white/10 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
-                title="Выйти"
-              >
-                <Icon name="LogOut" size={20} className="text-foreground/70" />
-              </Button>
+              {user.email === 'guest@example.com' ? (
+                <Button
+                  onClick={() => window.location.href = '/auth'}
+                  className="glass-effect border-white/10 hover:bg-primary/10 transition-all"
+                >
+                  <Icon name="LogIn" size={20} className="mr-2" />
+                  Войти
+                </Button>
+              ) : (
+                <>
+                  <div className="glass-effect px-4 py-2 rounded-full flex items-center gap-3">
+                    <span className="text-3xl">{user.avatar}</span>
+                    <div className="text-left">
+                      <div className="text-sm font-medium">{user.name}</div>
+                      <div className="text-xs text-foreground/50">{user.email}</div>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={onLogout}
+                    className="glass-effect border-white/10 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
+                    title="Выйти"
+                  >
+                    <Icon name="LogOut" size={20} className="text-foreground/70" />
+                  </Button>
+                </>
+              )}
             </div>
           </div>
           <div className="text-center">
