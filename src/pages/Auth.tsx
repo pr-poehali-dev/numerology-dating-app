@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 
 interface AuthProps {
@@ -8,22 +10,26 @@ interface AuthProps {
 }
 
 const Auth = ({ onAuth }: AuthProps) => {
-  const [isLoading, setIsLoading] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState('');
 
-  const handleSocialAuth = async (provider: string) => {
-    setIsLoading(provider);
+  const handleYandexAuth = async () => {
+    if (!email || !email.includes('@')) return;
     
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsLoading(true);
     
-    const mockUsers = {
-      google: { name: 'Алексей Иванов', email: 'alexey@gmail.com', avatar: '👨🏻' },
-      vk: { name: 'Мария Петрова', email: 'maria@vk.com', avatar: '👩🏻' },
-      yandex: { name: 'Дмитрий Сидоров', email: 'dmitry@ya.ru', avatar: '👨🏼' },
-      telegram: { name: 'Анна Смирнова', email: 'anna@t.me', avatar: '👩🏼' }
-    };
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    onAuth(mockUsers[provider as keyof typeof mockUsers]);
-    setIsLoading(null);
+    const name = email.split('@')[0];
+    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+    
+    onAuth({
+      name: capitalizedName,
+      email: email,
+      avatar: '👤'
+    });
+    
+    setIsLoading(false);
   };
 
   return (
