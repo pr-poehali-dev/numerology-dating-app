@@ -1,0 +1,20 @@
+{
+  "tests": [
+    {
+      "name": "Upload photo with valid base64",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "user_id": "123",
+        "image": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBD"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "url": "string",
+        "filename": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

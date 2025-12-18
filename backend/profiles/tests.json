@@ -1,0 +1,41 @@
+{
+  "tests": [
+    {
+      "name": "Get all profiles",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": [],
+      "bodyMatcher": "type"
+    },
+    {
+      "name": "Create user profile",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "user": {
+          "email": "test@example.com",
+          "name": "Тестовый Пользователь",
+          "provider": "test",
+          "avatar_url": "👤"
+        },
+        "profile": {
+          "birth_date": "1990-05-15",
+          "gender": "male",
+          "city": "Москва",
+          "bio": "Тестовое описание",
+          "interests": ["музыка", "спорт"]
+        }
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "user_id": "number",
+        "profile_id": "number",
+        "life_path": "number",
+        "destiny": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

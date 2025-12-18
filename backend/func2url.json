@@ -1,3 +1,7 @@
 {
+  "likes": "https://functions.poehali.dev/7e02c1e7-b0d0-4fdc-87d2-29cbe1ecb5f8",
+  "upload-photo": "https://functions.poehali.dev/970b9830-74c6-4f56-acbb-b8ec2c01bdbe",
+  "chat": "https://functions.poehali.dev/20d97635-919e-4e24-b37f-e7f8cb051191",
+  "profiles": "https://functions.poehali.dev/916f9f42-c438-4150-9b60-fae1fc44c068",
   "auth": "https://functions.poehali.dev/4a6faacc-451c-44d3-9865-6c48b0f4bf33"
 }

@@ -1,0 +1,21 @@
+{
+  "tests": [
+    {
+      "name": "Send message and create chat",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "sender_id": "1",
+        "recipient_id": "2",
+        "content": "Привет! Как дела?"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "chat_id": "number",
+        "message_id": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

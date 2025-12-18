@@ -1,0 +1,20 @@
+{
+  "tests": [
+    {
+      "name": "Add like",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "from_user_id": "1",
+        "to_user_id": "2",
+        "is_favorite": true
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "like_id": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
