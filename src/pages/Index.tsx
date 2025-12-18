@@ -161,8 +161,13 @@ const mockProfiles: Profile[] = [
   }
 ];
 
-const Index = () => {
-  const [name, setName] = useState('');
+interface IndexProps {
+  user: { name: string; email: string; avatar: string };
+  onLogout: () => void;
+}
+
+const Index = ({ user, onLogout }: IndexProps) => {
+  const [name, setName] = useState(user.name);
   const [birthDate, setBirthDate] = useState('');
   const [lifePath, setLifePath] = useState<number | null>(null);
   const [destiny, setDestiny] = useState<number | null>(null);
@@ -220,18 +225,40 @@ const Index = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.1),rgba(255,255,255,0))]"></div>
       
       <div className="container mx-auto px-4 py-12 relative z-10">
-        <header className="text-center mb-16">
-          <div className="inline-block mb-6 px-4 py-1.5 rounded-full glass-effect">
-            <span className="text-sm font-medium bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
-              Нумерология нового поколения
-            </span>
+        <header className="mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <div className="inline-block px-4 py-1.5 rounded-full glass-effect">
+              <span className="text-sm font-medium bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+                Нумерология нового поколения
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="glass-effect px-4 py-2 rounded-full flex items-center gap-3">
+                <span className="text-3xl">{user.avatar}</span>
+                <div className="text-left">
+                  <div className="text-sm font-medium">{user.name}</div>
+                  <div className="text-xs text-foreground/50">{user.email}</div>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onLogout}
+                className="glass-effect border-white/10 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
+                title="Выйти"
+              >
+                <Icon name="LogOut" size={20} className="text-foreground/70" />
+              </Button>
+            </div>
           </div>
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-br from-white via-primary to-purple-300 bg-clip-text text-transparent animate-float">
-            Путь
-          </h1>
-          <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
-            Найди свою судьбу через мудрость чисел
-          </p>
+          <div className="text-center">
+            <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-br from-white via-primary to-purple-300 bg-clip-text text-transparent animate-float">
+              Путь
+            </h1>
+            <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
+              Найди свою судьбу через мудрость чисел
+            </p>
+          </div>
         </header>
 
         <Tabs defaultValue="calculator" className="max-w-6xl mx-auto">
