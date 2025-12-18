@@ -167,12 +167,21 @@ const Index = () => {
   const [lifePath, setLifePath] = useState<number | null>(null);
   const [destiny, setDestiny] = useState<number | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
+  const [favorites, setFavorites] = useState<number[]>([]);
 
   const handleCalculate = () => {
     const lp = calculateLifePath(birthDate);
     const dest = calculateDestiny(name);
     setLifePath(lp);
     setDestiny(dest);
+  };
+
+  const toggleFavorite = (profileId: number) => {
+    setFavorites(prev => 
+      prev.includes(profileId) 
+        ? prev.filter(id => id !== profileId)
+        : [...prev, profileId]
+    );
   };
 
   return (
@@ -190,7 +199,7 @@ const Index = () => {
         </header>
 
         <Tabs defaultValue="calculator" className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full grid-cols-3 mb-8 bg-card border border-border">
+          <TabsList className="grid w-full grid-cols-4 mb-8 bg-card border border-border">
             <TabsTrigger value="calculator" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Icon name="Calculator" size={18} className="mr-2" />
               Калькулятор
@@ -198,6 +207,13 @@ const Index = () => {
             <TabsTrigger value="profiles" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Icon name="Users" size={18} className="mr-2" />
               Анкеты
+            </TabsTrigger>
+            <TabsTrigger value="favorites" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Icon name="Star" size={18} className="mr-2" />
+              Избранное
+              {favorites.length > 0 && (
+                <Badge className="ml-2 bg-primary text-primary-foreground">{favorites.length}</Badge>
+              )}
             </TabsTrigger>
             <TabsTrigger value="guide" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Icon name="BookOpen" size={18} className="mr-2" />
@@ -297,7 +313,19 @@ const Index = () => {
                 const compatibility = calculateCompatibility(myLifePath, profile.lifePath);
                 
                 return (
-                  <Card key={profile.id} className="bg-card/80 backdrop-blur border-border hover:shadow-xl transition-shadow">
+                  <Card key={profile.id} className="bg-card/80 backdrop-blur border-border hover:shadow-xl transition-shadow relative">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-4 right-4 z-10 hover:bg-transparent"
+                      onClick={() => toggleFavorite(profile.id)}
+                    >
+                      <Icon 
+                        name="Star" 
+                        size={24} 
+                        className={favorites.includes(profile.id) ? "fill-primary text-primary" : "text-muted-foreground hover:text-primary"}
+                      />
+                    </Button>
                     <CardHeader>
                       <div className="flex items-start gap-4">
                         <Avatar className="h-16 w-16 text-4xl">
@@ -305,7 +333,7 @@ const Index = () => {
                             {profile.avatar}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="flex-1">
+                        <div className="flex-1 pr-8">
                           <CardTitle className="text-2xl text-foreground">
                             {profile.name}, {profile.age}
                           </CardTitle>
@@ -491,6 +519,233 @@ const Index = () => {
                 );
               })}
             </div>
+          </TabsContent>
+
+          <TabsContent value="favorites" className="space-y-6">
+            {favorites.length === 0 ? (
+              <Card className="bg-card/80 backdrop-blur border-border">
+                <CardContent className="flex flex-col items-center justify-center py-16">
+                  <Icon name="Star" size={64} className="text-muted-foreground mb-4" />
+                  <h3 className="text-2xl font-semibold text-foreground mb-2">Избранное пусто</h3>
+                  <p className="text-muted-foreground text-center max-w-md">
+                    Добавляйте понравившиеся профили в избранное, нажимая на звёздочку в карточке анкеты
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-6">
+                {mockProfiles.filter(p => favorites.includes(p.id)).map((profile) => {
+                  const myLifePath = lifePath || 5;
+                  const compatibility = calculateCompatibility(myLifePath, profile.lifePath);
+                  
+                  return (
+                    <Card key={profile.id} className="bg-card/80 backdrop-blur border-border hover:shadow-xl transition-shadow relative">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-4 right-4 z-10 hover:bg-transparent"
+                        onClick={() => toggleFavorite(profile.id)}
+                      >
+                        <Icon 
+                          name="Star" 
+                          size={24} 
+                          className="fill-primary text-primary"
+                        />
+                      </Button>
+                      <CardHeader>
+                        <div className="flex items-start gap-4">
+                          <Avatar className="h-16 w-16 text-4xl">
+                            <AvatarFallback className="bg-primary/20 text-primary text-3xl">
+                              {profile.avatar}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 pr-8">
+                            <CardTitle className="text-2xl text-foreground">
+                              {profile.name}, {profile.age}
+                            </CardTitle>
+                            <CardDescription className="mt-1">{profile.bio}</CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <div className="text-sm text-muted-foreground">Жизненный путь</div>
+                            <Badge variant="outline" className="text-lg border-primary text-primary">
+                              {profile.lifePath}
+                            </Badge>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="text-sm text-muted-foreground">Число судьбы</div>
+                            <Badge variant="outline" className="text-lg border-primary text-primary">
+                              {profile.destiny}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Совместимость</span>
+                            <span className="text-primary font-semibold">{compatibility}%</span>
+                          </div>
+                          <Progress value={compatibility} className="h-2" />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button 
+                                variant="outline" 
+                                className="border-primary text-primary hover:bg-primary/10"
+                                onClick={() => setSelectedProfile(profile)}
+                              >
+                                <Icon name="Sparkles" size={18} className="mr-2" />
+                                Анализ
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl bg-card border-border">
+                              <DialogHeader>
+                                <DialogTitle className="text-3xl text-primary flex items-center gap-3">
+                                  <Icon name="Infinity" size={32} />
+                                  Детальный анализ совместимости
+                                </DialogTitle>
+                                <DialogDescription>
+                                  {name || 'Вы'} и {profile.name}
+                                </DialogDescription>
+                              </DialogHeader>
+                              
+                              {selectedProfile && (
+                                <div className="space-y-6 mt-4">
+                                  <div className="flex items-center justify-center gap-8">
+                                    <div className="text-center">
+                                      <Avatar className="h-20 w-20 mx-auto mb-2 text-5xl">
+                                        <AvatarFallback className="bg-primary/20 text-primary text-4xl">
+                                          👤
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      <div className="font-semibold">{name || 'Вы'}</div>
+                                      <Badge variant="outline" className="mt-2 border-primary text-primary">
+                                        Путь: {myLifePath}
+                                      </Badge>
+                                    </div>
+                                    
+                                    <div className="flex flex-col items-center">
+                                      <Icon name="Heart" size={32} className="text-primary animate-pulse" />
+                                      <div className="text-4xl font-bold text-primary mt-2">{compatibility}%</div>
+                                    </div>
+                                    
+                                    <div className="text-center">
+                                      <Avatar className="h-20 w-20 mx-auto mb-2 text-5xl">
+                                        <AvatarFallback className="bg-primary/20 text-primary text-4xl">
+                                          {selectedProfile.avatar}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      <div className="font-semibold">{selectedProfile.name}</div>
+                                      <Badge variant="outline" className="mt-2 border-primary text-primary">
+                                        Путь: {selectedProfile.lifePath}
+                                      </Badge>
+                                    </div>
+                                  </div>
+
+                                  <Progress value={compatibility} className="h-3" />
+
+                                  {(() => {
+                                    const analysis = getCompatibilityAnalysis(myLifePath, selectedProfile.lifePath);
+                                    return (
+                                      <>
+                                        <Card className="bg-gradient-to-br from-primary/10 to-transparent border-primary/30">
+                                          <CardHeader>
+                                            <CardTitle className="text-2xl text-primary">{analysis.title}</CardTitle>
+                                          </CardHeader>
+                                          <CardContent>
+                                            <p className="text-foreground/90">{analysis.description}</p>
+                                          </CardContent>
+                                        </Card>
+
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                          <Card className="bg-secondary/50 border-border">
+                                            <CardHeader>
+                                              <CardTitle className="text-lg flex items-center gap-2">
+                                                <Icon name="ThumbsUp" size={20} className="text-green-500" />
+                                                Сильные стороны
+                                              </CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                              <ul className="space-y-2">
+                                                {analysis.strengths.map((strength, idx) => (
+                                                  <li key={idx} className="flex items-start gap-2">
+                                                    <Icon name="Check" size={16} className="text-green-500 mt-1 flex-shrink-0" />
+                                                    <span className="text-sm text-foreground/80">{strength}</span>
+                                                  </li>
+                                                ))}
+                                              </ul>
+                                            </CardContent>
+                                          </Card>
+
+                                          <Card className="bg-secondary/50 border-border">
+                                            <CardHeader>
+                                              <CardTitle className="text-lg flex items-center gap-2">
+                                                <Icon name="AlertTriangle" size={20} className="text-amber-500" />
+                                                Что учесть
+                                              </CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                              <ul className="space-y-2">
+                                                {analysis.challenges.map((challenge, idx) => (
+                                                  <li key={idx} className="flex items-start gap-2">
+                                                    <Icon name="Info" size={16} className="text-amber-500 mt-1 flex-shrink-0" />
+                                                    <span className="text-sm text-foreground/80">{challenge}</span>
+                                                  </li>
+                                                ))}
+                                              </ul>
+                                            </CardContent>
+                                          </Card>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                          <Card className="bg-secondary/30 border-border">
+                                            <CardHeader>
+                                              <CardTitle className="text-base flex items-center gap-2">
+                                                <Icon name="User" size={18} />
+                                                {name || 'Ваше'} число {myLifePath}
+                                              </CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                              <p className="text-sm text-muted-foreground">{getNumberMeaning(myLifePath)}</p>
+                                            </CardContent>
+                                          </Card>
+
+                                          <Card className="bg-secondary/30 border-border">
+                                            <CardHeader>
+                                              <CardTitle className="text-base flex items-center gap-2">
+                                                <Icon name="User" size={18} />
+                                                {selectedProfile.name} число {selectedProfile.lifePath}
+                                              </CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                              <p className="text-sm text-muted-foreground">{getNumberMeaning(selectedProfile.lifePath)}</p>
+                                            </CardContent>
+                                          </Card>
+                                        </div>
+                                      </>
+                                    );
+                                  })()}
+                                </div>
+                              )}
+                            </DialogContent>
+                          </Dialog>
+
+                          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                            <Icon name="Heart" size={18} className="mr-2" />
+                            Написать
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="guide" className="space-y-6">
