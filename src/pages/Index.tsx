@@ -386,6 +386,33 @@ const Index = ({ user, onAuth, onLogout }: IndexProps) => {
           </TabsContent>
 
           <TabsContent value="profiles" className="space-y-6">
+            {user.email === 'guest@example.com' && (
+              <Card className="glass-effect border-primary/20 mb-6">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col md:flex-row items-center gap-6">
+                    <div className="p-4 rounded-full bg-primary/10">
+                      <Icon name="Lock" size={48} className="text-primary" />
+                    </div>
+                    <div className="flex-1 text-center md:text-left">
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+                        Войдите, чтобы найти свою пару
+                      </h3>
+                      <p className="text-foreground/70 mb-4">
+                        Для поиска партнера и использования всех функций приложения необходима авторизация через социальные сети
+                      </p>
+                      <Button
+                        onClick={() => window.location.href = '/auth'}
+                        className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-600 text-white"
+                      >
+                        <Icon name="LogIn" size={20} className="mr-2" />
+                        Войти через соцсети
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            
             <Card className="glass-effect border-white/10 mb-6">
               <CardContent className="pt-6 space-y-6">
                 <div className="flex flex-col gap-4">
@@ -468,7 +495,57 @@ const Index = ({ user, onAuth, onLogout }: IndexProps) => {
               </CardContent>
             </Card>
 
-            {filterProfiles(mockProfiles).length === 0 ? (
+            {user.email === 'guest@example.com' ? (
+              <div className="grid md:grid-cols-2 gap-6 opacity-50 pointer-events-none blur-sm">
+                {mockProfiles.slice(0, 4).map((profile) => {
+                const myLifePath = lifePath || 5;
+                const compatibility = calculateCompatibility(myLifePath, profile.lifePath);
+                
+                return (
+                  <Card key={profile.id} className="glass-effect border-white/10">
+                    <CardHeader>
+                      <div className="flex items-start gap-4">
+                        <Avatar className="h-16 w-16 text-4xl">
+                          <AvatarFallback className="bg-primary/20 text-primary text-3xl">
+                            {profile.avatar}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <CardTitle className="text-2xl text-foreground">
+                            {profile.name}, {profile.age}
+                          </CardTitle>
+                          <CardDescription className="mt-1">{profile.bio}</CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <div className="text-sm text-muted-foreground">Жизненный путь</div>
+                          <Badge variant="outline" className="text-lg border-primary text-primary">
+                            {profile.lifePath}
+                          </Badge>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-sm text-muted-foreground">Число судьбы</div>
+                          <Badge variant="outline" className="text-lg border-primary text-primary">
+                            {profile.destiny}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Совместимость</span>
+                          <span className="text-primary font-semibold">{compatibility}%</span>
+                        </div>
+                        <Progress value={compatibility} className="h-2" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+              </div>
+            ) : filterProfiles(mockProfiles).length === 0 ? (
               <Card className="glass-effect border-white/10">
                 <CardContent className="flex flex-col items-center justify-center py-20">
                   <div className="p-6 rounded-full bg-primary/10 mb-6">
@@ -493,7 +570,13 @@ const Index = ({ user, onAuth, onLogout }: IndexProps) => {
                       variant="ghost"
                       size="icon"
                       className="absolute top-4 right-4 z-10 hover:bg-white/10 transition-all"
-                      onClick={() => toggleFavorite(profile.id)}
+                      onClick={() => {
+                        if (user.email === 'guest@example.com') {
+                          window.location.href = '/auth';
+                        } else {
+                          toggleFavorite(profile.id);
+                        }
+                      }}
                     >
                       <Icon 
                         name="Star" 
@@ -684,7 +767,14 @@ const Index = ({ user, onAuth, onLogout }: IndexProps) => {
                           </DialogContent>
                         </Dialog>
 
-                        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                        <Button 
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                          onClick={() => {
+                            if (user.email === 'guest@example.com') {
+                              window.location.href = '/auth';
+                            }
+                          }}
+                        >
                           <Icon name="Heart" size={18} className="mr-2" />
                           Написать
                         </Button>
@@ -698,7 +788,26 @@ const Index = ({ user, onAuth, onLogout }: IndexProps) => {
           </TabsContent>
 
           <TabsContent value="favorites" className="space-y-6">
-            {favorites.length === 0 ? (
+            {user.email === 'guest@example.com' ? (
+              <Card className="glass-effect border-primary/20">
+                <CardContent className="flex flex-col items-center justify-center py-16">
+                  <div className="p-6 rounded-full bg-primary/10 mb-6">
+                    <Icon name="Lock" size={64} className="text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-foreground mb-2">Войдите для использования избранного</h3>
+                  <p className="text-foreground/60 text-center max-w-md mb-6">
+                    Сохраняйте понравившиеся профили и находите их в любое время
+                  </p>
+                  <Button
+                    onClick={() => window.location.href = '/auth'}
+                    className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-600 text-white"
+                  >
+                    <Icon name="LogIn" size={20} className="mr-2" />
+                    Войти через соцсети
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : favorites.length === 0 ? (
               <Card className="bg-card/80 backdrop-blur border-border">
                 <CardContent className="flex flex-col items-center justify-center py-16">
                   <Icon name="Star" size={64} className="text-muted-foreground mb-4" />
