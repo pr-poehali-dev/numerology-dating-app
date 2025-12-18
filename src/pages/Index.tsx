@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const calculateLifePath = (date: string): number => {
   if (!date) return 0;
@@ -66,6 +67,44 @@ const getNumberMeaning = (num: number): string => {
     33: 'Мастер-число: учитель мастеров'
   };
   return meanings[num] || '';
+};
+
+const getCompatibilityAnalysis = (num1: number, num2: number) => {
+  const compatibility = calculateCompatibility(num1, num2);
+  
+  const analyses: { [key: string]: { title: string; description: string; strengths: string[]; challenges: string[] } } = {
+    'same': {
+      title: 'Идеальное совпадение',
+      description: 'У вас одинаковые числа жизненного пути! Это создаёт глубокое взаимопонимание и гармонию. Вы легко чувствуете настроение друг друга и разделяете схожие жизненные цели.',
+      strengths: ['Полное взаимопонимание', 'Схожие ценности и цели', 'Естественная гармония'],
+      challenges: ['Риск монотонности', 'Нужно сохранять индивидуальность', 'Важно развиваться вместе']
+    },
+    'close': {
+      title: 'Высокая совместимость',
+      description: 'Ваши числа находятся в гармоничной связи. Различия дополняют друг друга, создавая баланс между схожестью и разнообразием. Вы можете многому научиться друг у друга.',
+      strengths: ['Взаимное обогащение', 'Баланс схожести и различий', 'Развитие через партнёра'],
+      challenges: ['Нужно уважать различия', 'Компромиссы в решениях', 'Терпение к особенностям']
+    },
+    'moderate': {
+      title: 'Умеренная совместимость',
+      description: 'Между вами есть притяжение, но требуется осознанная работа над отношениями. Различия в подходах к жизни могут как обогащать, так и создавать напряжение.',
+      strengths: ['Интересные различия', 'Возможность роста', 'Баланс противоположностей'],
+      challenges: ['Нужна осознанная работа', 'Важна коммуникация', 'Терпение и понимание']
+    },
+    'challenging': {
+      title: 'Требует усилий',
+      description: 'Ваши числа сильно отличаются, что создаёт как вызовы, так и уникальные возможности. Успех отношений зависит от готовности понимать и принимать друг друга.',
+      strengths: ['Уникальная динамика', 'Сильный потенциал роста', 'Расширение горизонтов'],
+      challenges: ['Значительные различия', 'Требует много усилий', 'Важно найти общий язык']
+    }
+  };
+  
+  let category = 'challenging';
+  if (compatibility === 100) category = 'same';
+  else if (compatibility >= 70) category = 'close';
+  else if (compatibility >= 55) category = 'moderate';
+  
+  return analyses[category];
 };
 
 interface Profile {
@@ -127,6 +166,7 @@ const Index = () => {
   const [birthDate, setBirthDate] = useState('');
   const [lifePath, setLifePath] = useState<number | null>(null);
   const [destiny, setDestiny] = useState<number | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
 
   const handleCalculate = () => {
     const lp = calculateLifePath(birthDate);
@@ -297,10 +337,155 @@ const Index = () => {
                         <Progress value={compatibility} className="h-2" />
                       </div>
 
-                      <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                        <Icon name="Heart" size={18} className="mr-2" />
-                        Отправить сообщение
-                      </Button>
+                      <div className="grid grid-cols-2 gap-2">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              className="border-primary text-primary hover:bg-primary/10"
+                              onClick={() => setSelectedProfile(profile)}
+                            >
+                              <Icon name="Sparkles" size={18} className="mr-2" />
+                              Анализ
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl bg-card border-border">
+                            <DialogHeader>
+                              <DialogTitle className="text-3xl text-primary flex items-center gap-3">
+                                <Icon name="Infinity" size={32} />
+                                Детальный анализ совместимости
+                              </DialogTitle>
+                              <DialogDescription>
+                                {name || 'Вы'} и {profile.name}
+                              </DialogDescription>
+                            </DialogHeader>
+                            
+                            {selectedProfile && (
+                              <div className="space-y-6 mt-4">
+                                <div className="flex items-center justify-center gap-8">
+                                  <div className="text-center">
+                                    <Avatar className="h-20 w-20 mx-auto mb-2 text-5xl">
+                                      <AvatarFallback className="bg-primary/20 text-primary text-4xl">
+                                        👤
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <div className="font-semibold">{name || 'Вы'}</div>
+                                    <Badge variant="outline" className="mt-2 border-primary text-primary">
+                                      Путь: {myLifePath}
+                                    </Badge>
+                                  </div>
+                                  
+                                  <div className="flex flex-col items-center">
+                                    <Icon name="Heart" size={32} className="text-primary animate-pulse" />
+                                    <div className="text-4xl font-bold text-primary mt-2">{compatibility}%</div>
+                                  </div>
+                                  
+                                  <div className="text-center">
+                                    <Avatar className="h-20 w-20 mx-auto mb-2 text-5xl">
+                                      <AvatarFallback className="bg-primary/20 text-primary text-4xl">
+                                        {selectedProfile.avatar}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <div className="font-semibold">{selectedProfile.name}</div>
+                                    <Badge variant="outline" className="mt-2 border-primary text-primary">
+                                      Путь: {selectedProfile.lifePath}
+                                    </Badge>
+                                  </div>
+                                </div>
+
+                                <Progress value={compatibility} className="h-3" />
+
+                                {(() => {
+                                  const analysis = getCompatibilityAnalysis(myLifePath, selectedProfile.lifePath);
+                                  return (
+                                    <>
+                                      <Card className="bg-gradient-to-br from-primary/10 to-transparent border-primary/30">
+                                        <CardHeader>
+                                          <CardTitle className="text-2xl text-primary">{analysis.title}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                          <p className="text-foreground/90">{analysis.description}</p>
+                                        </CardContent>
+                                      </Card>
+
+                                      <div className="grid md:grid-cols-2 gap-4">
+                                        <Card className="bg-secondary/50 border-border">
+                                          <CardHeader>
+                                            <CardTitle className="text-lg flex items-center gap-2">
+                                              <Icon name="ThumbsUp" size={20} className="text-green-500" />
+                                              Сильные стороны
+                                            </CardTitle>
+                                          </CardHeader>
+                                          <CardContent>
+                                            <ul className="space-y-2">
+                                              {analysis.strengths.map((strength, idx) => (
+                                                <li key={idx} className="flex items-start gap-2">
+                                                  <Icon name="Check" size={16} className="text-green-500 mt-1 flex-shrink-0" />
+                                                  <span className="text-sm text-foreground/80">{strength}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </CardContent>
+                                        </Card>
+
+                                        <Card className="bg-secondary/50 border-border">
+                                          <CardHeader>
+                                            <CardTitle className="text-lg flex items-center gap-2">
+                                              <Icon name="AlertTriangle" size={20} className="text-amber-500" />
+                                              Что учесть
+                                            </CardTitle>
+                                          </CardHeader>
+                                          <CardContent>
+                                            <ul className="space-y-2">
+                                              {analysis.challenges.map((challenge, idx) => (
+                                                <li key={idx} className="flex items-start gap-2">
+                                                  <Icon name="Info" size={16} className="text-amber-500 mt-1 flex-shrink-0" />
+                                                  <span className="text-sm text-foreground/80">{challenge}</span>
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </CardContent>
+                                        </Card>
+                                      </div>
+
+                                      <div className="grid md:grid-cols-2 gap-4">
+                                        <Card className="bg-secondary/30 border-border">
+                                          <CardHeader>
+                                            <CardTitle className="text-base flex items-center gap-2">
+                                              <Icon name="User" size={18} />
+                                              {name || 'Ваше'} число {myLifePath}
+                                            </CardTitle>
+                                          </CardHeader>
+                                          <CardContent>
+                                            <p className="text-sm text-muted-foreground">{getNumberMeaning(myLifePath)}</p>
+                                          </CardContent>
+                                        </Card>
+
+                                        <Card className="bg-secondary/30 border-border">
+                                          <CardHeader>
+                                            <CardTitle className="text-base flex items-center gap-2">
+                                              <Icon name="User" size={18} />
+                                              {selectedProfile.name} число {selectedProfile.lifePath}
+                                            </CardTitle>
+                                          </CardHeader>
+                                          <CardContent>
+                                            <p className="text-sm text-muted-foreground">{getNumberMeaning(selectedProfile.lifePath)}</p>
+                                          </CardContent>
+                                        </Card>
+                                      </div>
+                                    </>
+                                  );
+                                })()}
+                              </div>
+                            )}
+                          </DialogContent>
+                        </Dialog>
+
+                        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                          <Icon name="Heart" size={18} className="mr-2" />
+                          Написать
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 );
